@@ -28,7 +28,7 @@ function Login() {
             </form>
             <p className="small mb-5 pb-lg-3 ms-5"><a className="text-muted" href="#!">Forgot password?</a></p>
             <p className='ms-5'>Don't have an account? <a href="/register" className="link-info">Register here</a></p>
-
+            <h1>asd</h1>
           </div>
 
         </MDBCol>
