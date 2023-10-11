@@ -1,29 +1,22 @@
-import React, { useState, useEffect,useRef } from "react";
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from "react";
 import CuisineComponent from '../components/CuisineComponent';
+import { getAllCuisine } from "../API/apiCuisine";
 
 const Cuisinestable = () => {
   const [Cuisines, setCuisines] = useState([]);
-const Cuisinesmapped=useRef([])
+  const [isLoading, setIsLoading] = useState(true);
+  const Cuisinesmapped = useRef([]);
+
   useEffect(() => {
     const fetchCuisines = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/cuisines');
-        const cuisinesArray = Object.values(response.data)[0];
-        Cuisinesmapped.current=cuisinesArray.map((cuisine,index) => <CuisineComponent cuisine={cuisine} key={index} />);
-      console.log(Cuisinesmapped);
-        setCuisines(cuisinesArray);
-        
-      } catch (error) {
-        console.error('Error fetching cuisine:', error);
-      }
-    };
+      const response = await getAllCuisine();
+      setCuisines(response.cuisines);
+      setIsLoading(false);
+    }
+
     fetchCuisines();
-    
   }, []);
 
-
-  
   return (
     <div className="table-container">
       <table aria-label="cuisine table">
@@ -34,7 +27,11 @@ const Cuisinesmapped=useRef([])
           </tr>
         </thead>
         <tbody>
-          {Cuisinesmapped.current}
+          {isLoading ? 
+          <tr><td>Loading</td></tr> : 
+          Cuisines.map((cuisine, index) => (
+            <CuisineComponent key={index} cuisine={cuisine} />
+          ))}
         </tbody>
       </table>
     </div>
