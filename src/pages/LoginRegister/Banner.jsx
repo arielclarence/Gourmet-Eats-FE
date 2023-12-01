@@ -1,4 +1,4 @@
-import loginBanner from '../images/loginBanner.jpg'
+import loginBanner from '../../images/loginBanner.jpg'
 import { MDBCol } from 'mdb-react-ui-kit';
 
 function Banner() {

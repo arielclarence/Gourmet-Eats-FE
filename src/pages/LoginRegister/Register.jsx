@@ -6,7 +6,7 @@ import {
   MDBInput
 }
 from 'mdb-react-ui-kit';
-import InputPassword from '../components/InputPassword';
+import InputPassword from '../../components/InputPassword';
 import Banner from './Banner';
 import Logo from './Logo';
 

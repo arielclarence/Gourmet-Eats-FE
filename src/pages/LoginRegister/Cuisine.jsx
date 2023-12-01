@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import CuisineComponent from '../components/CuisineComponent';
-import { getAllCuisine } from "../API/apiCuisine";
+import CuisineComponent from '../../components/CuisineComponent';
+import { getAllCuisine } from "../../services/CuisineServices";
 
 const Cuisinestable = () => {
   const [Cuisines, setCuisines] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const Cuisinesmapped = useRef([]);
 
   useEffect(() => {
     const fetchCuisines = async () => {
