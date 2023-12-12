@@ -13,7 +13,7 @@ import UserServices from '../../services/UserServices';
 import { useNavigate } from 'react-router-dom';
 
 
-function Login() {
+function Login(props) {
   // State for username and password
   const [usernameinput, setUsername] = useState('');
   const [passwordinput, setPassword] = useState('');
@@ -84,15 +84,7 @@ function Login() {
   });
   };
   return (
-    <MDBContainer fluid>
-      <MDBRow>
-        <MDBCol sm='6'>
-          <Logo />
-
-          <div className='d-flex flex-column justify-content-center h-custom-2 w-75 pt-4'>
-            <h3 className="fw-normal mb-2 ps-5 pb-3" style={{ letterSpacing: '1px' }}>Log in</h3>
-
-            <form onSubmit={handleSubmit} className="ml-5">
+            <form onSubmit={handleSubmit} method="post" className="ml-5">
               <MDBInput
                 wrapperClass='mb-4 mx-5 w-100'
                 label='Username'
@@ -108,22 +100,15 @@ function Login() {
                 value={passwordinput}
                 onChange={handlePasswordChange}
               />
+
               <MDBBtn className="mb-4 px-5 mx-5 w-100" color='info' size='lg' type='submit'>
                 Login
               </MDBBtn>
-            </form>
-            <p className="small mb-5 pb-lg-3 ms-5">
-              <a className="text-muted" href="#!">Forgot password?</a>
-            </p>
+              <p className="small mb-1 pb-lg-3 ms-5 ps-5 d-flex justify-content-center"><u className="link" onClick={props.forgotPassword}>Forget password?</u></p>
             <p className='ms-5'>
-              Don't have an account? <a href="/register" className="link-info">Register here</a>
+              Don't have an account? <u onClick={props.changeToRegister} className="link-info">Register here</u>
             </p>
-          </div>
-        </MDBCol>
-
-        <Banner />
-      </MDBRow>
-    </MDBContainer>
+            </form>
   );
 }
 

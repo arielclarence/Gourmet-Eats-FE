@@ -5,8 +5,15 @@ import axios from "axios";
 const hostName="http://localhost:8080/user"
 
 
-function saveUser(formUser) {
-    return axiosInstance.post(hostName,formUser);
+async function saveUser(formUser) {
+  // console.log(formData)
+  //   axiosInstance.post(hostName,formData);
+
+  //   const response = await axios.post(`${hostName}`, formData)
+  //   console.log(formData)
+
+  //   return response
+  return axiosInstance.post(hostName,formUser);
 }
 
 function getUserFromToken() {
