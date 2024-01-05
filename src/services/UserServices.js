@@ -17,12 +17,13 @@ async function saveUser(formUser) {
 }
 
 function getUserFromToken() {
+  console.log(jwtDecode(JSON.parse(sessionStorage.getItem("token"))));
     return jwtDecode(JSON.parse(sessionStorage.getItem("token")))
 }
 
 
 async function Login(formData){
-
+console.log(formData)
     const response = await axios.post(`${hostName}/login`, formData)
     .then(response=>{
         const token=response.data.accessToken
@@ -87,7 +88,8 @@ function changePassword(username,password){
 }
 
 function updateUser(formData){
-    return axiosInstance.put(`${hostName}`,formData)
+  console.log(formData)
+    return axiosInstance.put(`${hostName}/${formData.id}`,formData)
 }
 
 export default {

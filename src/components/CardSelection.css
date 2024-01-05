@@ -1,0 +1,18 @@
+/* CardSelection.css */
+
+.card-container {
+    display: flex;
+    overflow-x: auto; /* Add this to enable horizontal scrolling if there are many cards */
+  }
+  
+  .card {
+    /* Your card styles go here */
+    /* For example, you might want to set a fixed width for each card */
+    width: 200px;
+    margin-right: 10px; /* Adjust the margin between cards as needed */
+  }
+  
+  .selected {
+    /* Styling for selected card */
+  }
+  

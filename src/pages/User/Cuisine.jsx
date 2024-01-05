@@ -4,6 +4,7 @@ import { getAllCuisine } from "../../services/CuisineServices";
 
 const Cuisinestable = () => {
   const [Cuisines, setCuisines] = useState([]);
+  const [selectedCuisine, setSelectedCuisine] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -14,27 +15,33 @@ const Cuisinestable = () => {
     }
 
     fetchCuisines();
+    console.log(Cuisines)
   }, []);
+
+  const handleCuisineSelect = (cuisine) => {
+    setSelectedCuisine(cuisine);
+  };
 
   return (
     <div className="table-container">
-      <table aria-label="cuisine table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {isLoading ? 
-          <tr><td>Loading</td></tr> : 
-          Cuisines.map((cuisine, index) => (
-            <CuisineComponent key={index} cuisine={cuisine} />
-          ))}
-        </tbody>
-      </table>
+    <div className="card-container">
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        Cuisines.map((cuisine, index) => (
+          <CuisineComponent
+            key={index}
+            cuisine={cuisine}
+            onSelect={handleCuisineSelect}
+            isSelected={selectedCuisine === cuisine}
+          />
+        ))
+      )}
     </div>
+  </div>
   );
 };
 
 export default Cuisinestable;
+
+

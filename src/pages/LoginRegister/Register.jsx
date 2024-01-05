@@ -18,8 +18,8 @@ import { FaX,FaCheck } from 'react-icons/fa6';
 import InputFile from '../../components/InputFile';
 import userservices from '../../services/UserServices';
 import ToastServices from '../../services/ToastServices';
-import Banner from './Banner';
-import Logo from './Logo';
+import FirebaseServices from '../../services/FirebaseServices';
+
 
 function Register(props) {
 
@@ -34,12 +34,14 @@ function Register(props) {
     phonenumber:'',
     role:'',
     gender:'',
-    birthdate:''
+    birthdate:'',
+    profilePicture:null,
+    profilePictureUrl:''
   })
 
   //update form data
   const updateFormData=(event)=>{
-    setFormData({...formData,[event.target.name]:event.target.value})
+    setFormData({...formData,[event.target.name]:(event.target.name=='profilePicture')?event.target.files[0]:event.target.value})
   }
 
   //requirements for password
@@ -135,7 +137,7 @@ function Register(props) {
   const handleRegister=event=>{
     event.preventDefault()
     const passwordfailed=passwordRequirements.some(passwordRequirement=>passwordRequirement.correct==false)
-
+    
     if(!phoneNumberRegex.test(formData.phonenumber)){
 
       ToastServices.Error("Phone number is not a valid dutch phone number!")
@@ -143,21 +145,19 @@ function Register(props) {
       ToastServices.Error("Password requirements haven't been fulfilled!")
     }else if (formData.passwordhash!=formData.confirmationPassword){
       ToastServices.Error("Confirmation Password is not equals to the password!")
-    }else if(formData.name.length<1||formData.email.length<1||formData.username.length<1){
-
+    }else if(formData.name.length<1||formData.email.length<1||formData.username.length<1||formData.profilePictureUrl==null){
       ToastServices.Error("There is an empty field!")
     }else{
-      
-
-        setFormData({...formData})
-
+      FirebaseServices.uploadImage(formData.profilePicture,"user/"+formData.username)
+      .then(downloadUrl=>{
+        // setFormData({...formData,["profilePictureUrl"]:downloadUrl})
+        formData.profilePictureUrl=downloadUrl
         userservices.saveUser(formData)
-        .then(
-          ToastServices.Success("Succesfully registered! Check your email to activate your account!"))
+        .then(ToastServices.Success("Succesfully registered! Check your email to activate your account!"))
         .catch(error=>{
           const errorMessages=error.response.data.properties.errors
           errorMessages.map(errorMessage=>ToastServices.Error(convertErrorMessage(errorMessage.error)))
-      })
+      })})
     }
   }
   return (
@@ -169,7 +169,11 @@ function Register(props) {
           <div className='d-flex flex-column justify-content-center h-custom-2 w-75 pt-4'>
       <MDBValidation onSubmit={e=>handleRegister(e)}>
       
-       
+       {/** Profile picture input */}
+       <MDBValidationItem>
+          <InputFile getValue={updateFormData}/>
+        </MDBValidationItem>
+
         {/** Username input */}
         <MDBValidationItem invalid feedback={(formData.username.length<1)?'Username cannot be empty!':'Username has been taken!'}>
           <MDBInput wrapperClass='mb-5 mx-5 w-100'name='username' required label='Username' onChange={updateFormData} id='registerUsername' type='text' size="lg"/>
