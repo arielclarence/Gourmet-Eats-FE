@@ -27,6 +27,8 @@ console.log(formData)
     const response = await axios.post(`${hostName}/login`, formData)
     .then(response=>{
         const token=response.data.accessToken
+        console.log(response.data.accessToken);
+
         sessionStorage.setItem("token",JSON.stringify(token))
         console.log(response)
 

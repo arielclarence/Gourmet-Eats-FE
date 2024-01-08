@@ -24,3 +24,6 @@ export const getAllCuisine = async () => {
       // Redirect to login page or handle unauthenticated state
     }
   };
+  export default {
+    getAllCuisine
+}

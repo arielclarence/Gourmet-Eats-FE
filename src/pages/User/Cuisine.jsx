@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import CuisineComponent from '../../components/CuisineComponent';
 import { getAllCuisine } from "../../services/CuisineServices";
-
+import Food from "./Food";
 const Cuisinestable = () => {
   const [Cuisines, setCuisines] = useState([]);
   const [selectedCuisine, setSelectedCuisine] = useState(null);
@@ -15,15 +15,16 @@ const Cuisinestable = () => {
     }
 
     fetchCuisines();
-    console.log(Cuisines)
   }, []);
 
-  const handleCuisineSelect = (cuisine) => {
-    setSelectedCuisine(cuisine);
-  };
+// Cuisinestable.jsx
 
-  return (
-    <div className="table-container">
+const handleCuisineSelect = (cuisine) => {
+  setSelectedCuisine(cuisine);
+};
+
+return (
+  <div className="table-container">
     <div className="card-container">
       {isLoading ? (
         <p>Loading...</p>
@@ -38,10 +39,13 @@ const Cuisinestable = () => {
         ))
       )}
     </div>
+
+    {selectedCuisine && (
+      <Food cuisine={selectedCuisine} />
+    )}
   </div>
-  );
+);
+
 };
 
 export default Cuisinestable;
-
-

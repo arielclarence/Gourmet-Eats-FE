@@ -1,0 +1,39 @@
+/* Food.css */
+
+/* Styles for the parent container of Food component */
+.food-container {
+    margin-top: 20px;
+  }
+  
+  /* Styles for the heading */
+  .food-heading {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  /* Styles for the container of FoodCard components */
+  .food-card-container {
+    display: flex;
+    overflow-x: auto;
+  }
+  
+  /* Styles for each FoodCard component */
+  .card {
+    /* Add any styles for each card item */
+    margin-right: 20px; /* Increased spacing between cards */
+    width: 500px; /* Set the width of each card */
+    height: 600px; /* Set the height of each card */
+    border-radius: 8px; /* Add border radius for rounded corners */
+    overflow: hidden; /* Hide overflow content */
+    cursor: pointer; /* Add cursor pointer on hover */
+  
+    /* Optional: Add box-shadow for a subtle effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Optional: Add styles for selected card */
+  .selected {
+    background-color: green; /* Change to your preferred color */
+    color: white;
+  }
+  

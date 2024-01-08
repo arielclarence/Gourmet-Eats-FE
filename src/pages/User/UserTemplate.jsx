@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import Navbar from "../../components/Navbar";
 import AdminDashboard from './AdminDashboard';
-
-
-
 import CustomerDashboard from "./CustomerDashboard";
 import UserProfile from "./UserProfile";
+import CreateFood from "./Addnewfoodform";
 import Cuisinestable from "./Cuisine";
 import Userstable from "../LoginRegister/User";
 import UserServices from "../../services/UserServices";
 import { useNavigate } from "react-router-dom";
 
 export default function UserTemplate(){
+    const childRef=useRef()
     const [currentPage,setCurrentPage]=useState(sessionStorage.getItem("page"));
     const navigate=useNavigate()
     const user=useState(UserServices.getUserFromToken())[0]
@@ -21,12 +20,15 @@ export default function UserTemplate(){
     const switchPage=()=>{
         setCurrentPage(sessionStorage.getItem("page"))
     }
+    const profilePictureUpload=()=>{
+        childRef.current.reloadImage()
+    }
     const checkUserRoleForDashboard=()=>{
         switch (user.role) {
-            case 'ADMIN':
+            case 'Admin':
                 return(<AdminDashboard/>)
             
-            case 'CUSTOMER':
+            case 'Customer':
                 return(<CustomerDashboard/>)
             default:
                 break;
@@ -44,13 +46,16 @@ export default function UserTemplate(){
                 setPageObject(<Userstable/>)
                 break;
             case 'Profile':
-                setPageObject(<UserProfile/>)
+                setPageObject(<UserProfile profilePictureUpload={profilePictureUpload}/>)
                 break;
             case 'Cuisines':
                 setPageObject(<Cuisinestable/>)
                 break;
+            case 'Add New Food':
+                setPageObject(<CreateFood/>)
+                break;
             default:
-                setPageObject(<UserProfile/>)
+                setPageObject(<Cuisinestable/>)
                 break;
         }
     },[currentPage])    
