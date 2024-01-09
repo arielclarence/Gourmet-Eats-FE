@@ -1,18 +1,17 @@
 import { useState } from "react";
 
-const SendMessageComponent = (props) => {
+const SendMessagePlaceholder = (props) => {
   const [message, setMessage] = useState('');
+  const [destinationUsername, setDestinationUsername] = useState('');
 
 
 
   const onMessageSend = () => {
     if (!message) {
       alert('Please type a message!');
-      return;
     }
 
-    // Assume that props.destinationUsername is the specific destination
-    props.onMessageSend({ text: message});
+    props.onMessageSend({ 'text': message, 'to': destinationUsername });
     setMessage('');
   }
 
@@ -25,9 +24,11 @@ const SendMessageComponent = (props) => {
       <label htmlFor='message'>Message:</label>
       <input id='message' type='text' onChange={(event) => setMessage(event.target.value)} value={message}></input>
       <br />
-      <button type="button" onClick={onMessageSend}>Send</button>
+      <label htmlFor='destUsername'>Destination:</label>
+      <input id='destUsername' type='text' onChange={(event) => setDestinationUsername(event.target.value)}></input>
+      <button onClick={onMessageSend}>Send</button>
     </form>
   );
 }
 
-export default SendMessageComponent;
+export default SendMessagePlaceholder;

@@ -40,7 +40,6 @@ export default function UserTemplate(){
             case 'Dashboard':
                 setPageObject(checkUserRoleForDashboard());
                 break;
-           
       
             case 'Users':
                 setPageObject(<Userstable/>)
@@ -51,11 +50,14 @@ export default function UserTemplate(){
             case 'Cuisines':
                 setPageObject(<Cuisinestable/>)
                 break;
+            case 'Your Food':
+                setPageObject(<Cuisinestable/>)
+                break;
             case 'Add New Food':
                 setPageObject(<CreateFood/>)
                 break;
             default:
-                setPageObject(<Cuisinestable/>)
+                setPageObject(<UserProfile profilePictureUpload={profilePictureUpload}/>)
                 break;
         }
     },[currentPage])    

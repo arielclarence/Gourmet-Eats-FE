@@ -5,15 +5,17 @@ import FoodServices from '../../services/FoodServices';
 import UserServices from '../../services/UserServices';
 import Modal from '../../components/Modal';
 import Select from 'react-select';
+import CreateFood from './Addnewfoodform';
 import './Food.css'; 
+import { FaCheck, FaPlus } from "react-icons/fa";
+import { FaXmark } from "react-icons/fa6";
+
 // import ToastServices from '../../services/ToastServices';
 
 function Food({ cuisine }) {
   const user=UserServices.getUserFromToken();
 
   const [foodItems, setFoodItems] = useState([]);
-  const [selectedFood, setSelectedFood] = useState(null);
-  const [foods, setFoods] = useState([]);
   const sortOptions = [
     { label: 'Price', value: 'price' },
   ];
@@ -27,7 +29,14 @@ function Food({ cuisine }) {
   useEffect(() => {
     const fetchFoodByCuisine = async () => {
       const response = await FoodServices.getFoodByCuisineId(cuisine.id);
-      setFoodItems(response.foods);
+
+      if (user.role === "Seller") {
+        const targetSeller = user.userid; 
+        const filteredFoods = response.foods.filter(food => food.seller.id === targetSeller);
+        setFoodItems(filteredFoods);
+      } else {
+        setFoodItems(response.foods);
+      }
     };
 
     fetchFoodByCuisine();
@@ -107,9 +116,9 @@ function Food({ cuisine }) {
         // childRef.current = null;
         // break;
       case 'CREATE':
-        // setModalBody(<CreateFood ref={childRef} />);
-        // setModalTitle('Create Food');
-        // break;
+        setModalBody(<CreateFood ref={childRef}/>);
+        setModalTitle('Create Food');
+        break;
       case 'EDIT':
         // setModalBody(<EditFood foodId={id} ref={childRef} />);
         // setModalTitle('Edit Food');

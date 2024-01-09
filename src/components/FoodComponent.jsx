@@ -2,8 +2,11 @@ import React from 'react';
 import { Card, CardContent, CardMedia, Typography, Button } from '@mui/material';
 import UserServices from '../services/UserServices';
 import ChatService from '../services/ChatService';
+import { useNavigate } from 'react-router-dom';
+
 function FoodCardComponent({ food, onSelect, isSelected }) {
   const userloggedinid=UserServices.getUserFromToken().userid;
+  const navigate=useNavigate()
   const chatData = {
     customerid: userloggedinid,
     sellerid: food.seller.id
@@ -11,10 +14,18 @@ function FoodCardComponent({ food, onSelect, isSelected }) {
   const handleSelect = () => {
     onSelect(food);
   };
-  const handleOpenChat = () => {
+  const handleOpenChat = async () => {
+    try {
+      // Make the chat room and get the chat ID
+      const chatId = await ChatService.makechatroom(chatData);
 
-     ChatService.makechatroom(chatData);
-  };
+      // Navigate to the chat page with the chat ID
+      navigate('/chat')
+      window.location.href = '/chat';
+    } catch (error) {
+      console.error('Error opening chat:', error);
+    }
+  }
 
   const cardStyle = {
     margin: '0 20px', // Increased spacing between cards

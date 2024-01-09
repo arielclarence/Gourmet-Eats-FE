@@ -1,5 +1,11 @@
 import axios from 'axios';
+import axiosInstance from "./AxiosService";
+
 const hostName="http://localhost:8080/food"
+
+async function createFood(formUser) {
+  return axiosInstance.post(hostName,formUser);
+}
 const getFoodByCuisineId = async (cuisineid) => {
     const accessToken= JSON.parse(sessionStorage.getItem("token"))
 
@@ -50,5 +56,6 @@ const getFoodByCuisineId = async (cuisineid) => {
   };
   export default {
     getFoodByCuisineId,
-    getAllFoods
+    getAllFoods,
+    createFood
 }

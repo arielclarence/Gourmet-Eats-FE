@@ -52,9 +52,10 @@ function Login(props) {
           window.location.href = '/user';
           break;
 
-        // case 'CUSTOMER':
-        //   window.location.href = '/customer';
-        //   break;
+        case 'Seller':
+          navigate('/seller')
+          window.location.href = '/seller';
+          break;
 
         default:
           break;

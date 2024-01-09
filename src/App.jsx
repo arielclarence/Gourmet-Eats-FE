@@ -6,6 +6,8 @@ import Cuisinestable from './pages/User/Cuisine';
 import Userstable from './pages/LoginRegister/User';
 import LoginRegisterTemplate from "./pages/LoginRegister/LoginRegisterTemplate";
 import UserTemplate from './pages/User/UserTemplate';
+import ChatPage from './pages/User/ChatPage';
+import Chat from './pages/User/App';
 
 function App() {
   return(
@@ -15,7 +17,9 @@ function App() {
           <Route path='/' element={<LoginRegisterTemplate />}/>
           {/* <Route path='/register' element={<Register />}/> */}
           <Route path='/customer' element={<UserTemplate />}/>
+          <Route path='/seller' element={<UserTemplate />}/>
           <Route path='/user' element={<UserTemplate />}/>
+          <Route path='/chat' element={<ChatPage />}/>
 
         </Routes>
       </Router>

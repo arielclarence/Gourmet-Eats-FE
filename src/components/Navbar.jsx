@@ -46,6 +46,9 @@ const Navbar=forwardRef(function Navbar(props,ref) {
             name:'Dashboard',
             active:page=='Dashboard'
         },{
+          name:'Your Food',
+          active:page=='Cuisines'
+      },{
             name:'Add New Food',
             active:page=='Add New Food'
         }
@@ -77,6 +80,7 @@ const Navbar=forwardRef(function Navbar(props,ref) {
 
   const changePage=(name)=>{
     const newItems=items
+    console.log(name);
     sessionStorage.setItem("page",name )
     newItems.map((item)=>{
         item.active=name==item.name
@@ -117,7 +121,9 @@ const Navbar=forwardRef(function Navbar(props,ref) {
             </MDBNavbarNav>
           </MDBCol>
           <MDBCol md="1" className='d-flex pe-3 m=lg-s-3 me-4'>
+          
           {(user.role!="Admin")?<img src={image} style={{maxHeight:"50px",maxWidth:"50px", cursor:"pointer"}}name="userProfile" onClick={changePage} className='my-3 img-fluid w-50 rounded-circle'/>:<></>}
+          
           </MDBCol>
           <MDBCol md="1" >
             <FaSignOutAlt className={clickable.clickablePointer} onClick={LogOut} size={28}/>
