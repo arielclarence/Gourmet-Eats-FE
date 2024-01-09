@@ -14,7 +14,7 @@ const getFoodByCuisineId = async (cuisineid) => {
         });
   
         // Handle the response data
-        console.log(JSON.stringify(response));
+        console.log(JSON.stringify(response.data.foods));
         return response.data;
       } catch (error) {
         console.error('Request failed:', error);

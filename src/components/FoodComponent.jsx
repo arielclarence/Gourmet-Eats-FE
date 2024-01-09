@@ -1,9 +1,19 @@
 import React from 'react';
-import { Card, CardContent, CardMedia, Typography } from '@mui/material';
-
+import { Card, CardContent, CardMedia, Typography, Button } from '@mui/material';
+import UserServices from '../services/UserServices';
+import ChatService from '../services/ChatService';
 function FoodCardComponent({ food, onSelect, isSelected }) {
+  const userloggedinid=UserServices.getUserFromToken().userid;
+  const chatData = {
+    customerid: userloggedinid,
+    sellerid: food.seller.id
+  };
   const handleSelect = () => {
     onSelect(food);
+  };
+  const handleOpenChat = () => {
+
+     ChatService.makechatroom(chatData);
   };
 
   const cardStyle = {
@@ -47,6 +57,9 @@ function FoodCardComponent({ food, onSelect, isSelected }) {
           <Typography variant="h6" style={{ marginTop: '10px' }}>
             Price: ${food.price.toFixed(2)}
           </Typography>
+          <Button variant="contained" color="primary" onClick={handleOpenChat} style={{ marginTop: '10px' }}>
+            Open Chat
+          </Button>
         </CardContent>
       </Card>
     </div>

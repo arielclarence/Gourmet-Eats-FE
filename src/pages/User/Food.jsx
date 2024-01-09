@@ -24,7 +24,6 @@ function Food({ cuisine }) {
   ];
   const [ascendingSort, setAscendingSort] = useState(ascSortOptions[0]);
 
-
   useEffect(() => {
     const fetchFoodByCuisine = async () => {
       const response = await FoodServices.getFoodByCuisineId(cuisine.id);
@@ -64,7 +63,10 @@ function Food({ cuisine }) {
   const sortFoodsByPrice = (list) => list.slice().sort((a, b) => doSort(a.price, b.price));
 
   const sortFoodsByArea = (list) => list.slice().sort((a, b) => doSort(a.area, b.area));
-
+  const handleFoodSelect = (food) => {
+    console.log("Food selected:", food);
+    setSelectedFood(food);
+  };
   useEffect(() => {
     let sortedFood;
     // let filteredFood;
@@ -81,7 +83,14 @@ function Food({ cuisine }) {
 
     setFoodCards(
       sortedFood.map((food) => (
-        <FoodComponent key={food.id} food={food} openModal={toggleModal} role={user.role} />
+        <FoodComponent 
+        key={food.id} 
+        onSelect={handleFoodSelect} 
+        food={food} 
+        openModal={toggleModal} 
+        role={user.role} 
+        // isSelected={selectedFood && selectedFood.id === food.id}
+        />
       ))
     );
   }, [foodItems,sortOption, ascendingSort]);

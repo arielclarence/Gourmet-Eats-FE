@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import FoodComponent from '../../components/FoodComponent'; // Update the import path
-import { getFoodByCuisineId } from '../../services/FoodServices'; 
-import './Food.css'; 
+import FoodServices from '../../services/FoodServices';
 
 
 function Food({ cuisine }) {
@@ -10,7 +9,7 @@ function Food({ cuisine }) {
 
   useEffect(() => {
     const fetchFoodByCuisine = async () => {
-      const response = await getFoodByCuisineId(cuisine.id);
+      const response = await FoodServices.getFoodByCuisineId(cuisine.id);
       setFoodItems(response.foods);
     };
 
