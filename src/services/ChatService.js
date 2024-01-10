@@ -7,7 +7,7 @@ const makechatroom = async (formUser) => {
     const response = await axios.post(hostName, formUser);
 
     // Assuming the response contains a chat ID property (adjust accordingly)
-    const chatId = response.data.chatId;
+    const chatId = response.data.id;
 
     // Store the chat ID in sessionStorage
     sessionStorage.setItem('chatId', chatId);

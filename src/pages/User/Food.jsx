@@ -74,7 +74,6 @@ function Food({ cuisine }) {
   const sortFoodsByArea = (list) => list.slice().sort((a, b) => doSort(a.area, b.area));
   const handleFoodSelect = (food) => {
     console.log("Food selected:", food);
-    setSelectedFood(food);
   };
   useEffect(() => {
     let sortedFood;

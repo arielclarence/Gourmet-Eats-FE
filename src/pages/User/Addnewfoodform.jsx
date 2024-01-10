@@ -2,50 +2,62 @@ import { MDBInput, MDBTextArea, MDBValidation, MDBValidationItem, MDBBtn } from 
 import { forwardRef, useImperativeHandle, useState, useEffect } from "react";
 import CuisineServices from "../../services/CuisineServices";
 import FoodServices from "../../services/FoodServices";
+import UserServices from "../../services/UserServices";
 import InputFile from "../../components/InputFile";
 import FirebaseServices from "../../services/FirebaseServices";
 import ToastServices from "../../services/ToastServices";
 import Select from 'react-select';
 
 const CreateFood = forwardRef(function CreateFood(props, ref) {
+    const user=UserServices.getUserFromToken();
     const [formData, setFormData] = useState({
+        sellerid: user.userid,
         description: "",
         name: "",
-        imageUrl: "",
+        pictureUrl: "",
         price: 0,
         image: null,
-        cuisineId: null,
+        cuisineid: null,
     });
-    const [cuisines, setCuisines] = useState([]); // State to store the list of cuisines
+    const [cuisines, setCuisines] = useState([]);
 
-    // Simulate fetching cuisines from an API
     useEffect(() => {
         const fetchCuisines = async () => {
             const response = await CuisineServices.getAllCuisine();
             setCuisines(response.cuisines);
-            console.log(response.cuisines);
         };
 
         fetchCuisines();
-    }, []);
+    }, []); // Include fetchCuisines in the dependency array
 
-    const handleSubmit = () => {
-        event.preventDefault()
-        if(formData.name.length<1||formData.description.length<1||formData.price==null||formData.cuisineId==null||formData.imageUrl==null){
-            ToastServices.Error("There is an empty field!")
-          }else{
-            FirebaseServices.uploadImage(formData.image,"food/"+formData.name)
-            .then(downloadUrl=>{
-              // setFormData({...formData,["profilePictureUrl"]:downloadUrl})
-              formData.imageUrl=downloadUrl
-              FoodServices.createFood(formData)
-              .then(ToastServices.Success("Succesful creating new food"))
-              .catch(error=>{
-                const errorMessages=error.response.data.properties.errors
-                errorMessages.map(errorMessage=>ToastServices.Error(convertErrorMessage(errorMessage.error)))
-            })})
-          }
-        props.onSubmit(formData);
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log(formData)
+        if (
+            formData.name.length < 1 ||
+            formData.description.length < 1 ||
+            formData.price === null ||
+            formData.cuisineid === null ||
+            formData.pictureUrl === null
+        ) {
+            ToastServices.Error("There is an empty field!");
+        } else {
+            FirebaseServices.uploadImage(formData.image, "food/" + formData.name)
+                .then((downloadUrl) => {
+                    formData.pictureUrl = downloadUrl;
+                    FoodServices.createFood(formData)
+                        .then(() => {
+                            ToastServices.Success("Succesful creating new food");
+                            props.onSubmit(formData);
+                        })
+                        .catch((error) => {
+                            const errorMessages = error.response.data.properties.errors;
+                            errorMessages.map((errorMessage) =>
+                                ToastServices.Error(convertErrorMessage(errorMessage.error))
+                            );
+                        });
+                });
+        }
     };
 
     useImperativeHandle(ref, () => ({
@@ -53,12 +65,17 @@ const CreateFood = forwardRef(function CreateFood(props, ref) {
     }));
 
     const updateFormData = (name, value) => {
-        setFormData({ ...formData, [name]: value });
+        setFormData((prevFormData) => {
+            // Handle 'image' property separately
+            if (name === "image") {
+                return { ...prevFormData, [name]: value };
+            }
+            return { ...prevFormData, [name]: value };
+        });
     };
-
     return (
         <MDBValidation className="w-75">
-            <InputFile getValue={(e) => updateFormData("image", e.target.files[0])} />
+            <InputFile onChange={(e) => updateFormData("image", e)} />
 
             <MDBValidationItem feedback="Invalid value" invalid>
                 <MDBInput
@@ -84,8 +101,8 @@ const CreateFood = forwardRef(function CreateFood(props, ref) {
                 <label>Cuisine</label>
                 <Select
                     options={cuisines.map((cuisine) => ({ value: cuisine.id, label: cuisine.cuisineName }))}
-                    onChange={(selectedOption) => updateFormData("cuisineId", selectedOption.value)}
-                    value={cuisines.find((cuisine) => cuisine.value === formData.cuisineId)}
+                    onChange={(selectedOption) => updateFormData("cuisineid", selectedOption.value)}
+                    value={cuisines.find((cuisine) => cuisine.value === formData.cuisineid)}
                 />
             </MDBValidationItem>
             <MDBValidationItem feedback="Invalid value" invalid>

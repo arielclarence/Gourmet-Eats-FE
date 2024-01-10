@@ -3,7 +3,6 @@ import axios from 'axios';
 export const getAllCuisine = async () => {
     const accessToken= JSON.parse(sessionStorage.getItem("token"))
 
-    console.log(JSON.stringify(accessToken));
   
     if (accessToken) {
       try {

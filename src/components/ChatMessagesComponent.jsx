@@ -23,7 +23,7 @@ const ChatMessagesComponent = (props) => {
       {props.messagesReceived.map((message) => (
         <MessageReceived
           key={message.id}
-          text={message.text}
+          text={message.content}
           timestamp={message.timestamp}
           isCurrentUser={message.from === props.username}
         />

@@ -3,16 +3,16 @@ import { Client } from '@stomp/stompjs';
 import { v4 as uuidv4 } from 'uuid';
 import ChatMessagesComponent from '../../components/ChatMessagesComponent';
 import SendMessageComponent from '../../components/SendMessageComponent';
+import MessageService from '../../services/MessageService';
+import UserServices from '../../services/UserServices';
 
 function ChatPage() {
+    const user=UserServices.getUserFromToken();
     const [stompClient, setStompClient] = useState();
     const [messagesReceived, setMessagesReceived] = useState([]);
+    const [fetchingPrevious, setFetchingPrevious] = useState(false);
 
     useEffect(() => {
-        setupStompClient();
-    }, []); // Run only once on component mount
-
-    const setupStompClient = () => {
         const stompClient = new Client({
             brokerURL: 'ws://localhost:8080/ws',
             reconnectDelay: 5000,
@@ -21,38 +21,60 @@ function ChatPage() {
         });
 
         stompClient.onConnect = () => {
-          stompClient.subscribe('/topic/chat', (data) => {
-              onMessageReceived(data);
-          });
-      };
-  
-      stompClient.onStompError = (frame) => {
-          console.error('Stomp Error:', frame);
-      };
-  
-      stompClient.onWebSocketClose = (event) => {
-          console.log('WebSocket Close:', event);
-      };
-  
-      stompClient.onUnhandledFrame = (frame) => {
-          console.log('Unhandled Frame:', frame);
-      };
-  
-      stompClient.activate();
-  
-      setStompClient(stompClient);
-  };
+            stompClient.subscribe('/topic/chat', (frame) => {
+                onMessageReceived(frame);
+            });
+        };
 
-    const sendMessage = (newMessage) => {
-        const payload = { 'id': uuidv4(), 'text': newMessage.text };
+        stompClient.activate();
+
+        setStompClient(stompClient);
+        fetchLatestMessages();
+        return () => {
+            // Cleanup function to unsubscribe when the component unmounts
+            stompClient.deactivate();
+        };
+    }, []);
+
+    const sendMessage = async (newMessage) => {
+
+        const payload = {
+            'id': uuidv4(),
+            'senderid': user.userid, // Assuming newMessage has senderid property
+            'content':  newMessage.text, // Assuming newMessage has text property
+            'chatid': null, // Assuming newMessage has chatid property
+        };
+
+        // Send the message to the backend
+        try {
+            await MessageService.sendMessage(payload);
+            
+        } catch (error) {
+            console.error('Error posting message:', error);
+            return;
+        }
+
+        // Publish the message to the WebSocket
         stompClient.publish({ 'destination': '/topic/chat', body: JSON.stringify(payload) });
     };
 
-    const onMessageReceived = (data) => {
-        const message = JSON.parse(data.body);
-console.log(message);
+    const onMessageReceived = (frame) => {
+        const message = JSON.parse(frame.body);
+        setMessagesReceived((prevMessages) => [...prevMessages, message]);
+    };
 
-        setMessagesReceived(messagesReceived => [...messagesReceived, message]);
+    const fetchLatestMessages = async () => {
+        setFetchingPrevious(true);
+
+        try {
+            const messagesData = await MessageService.getMessagesByChatid();
+            console.log(messagesData.messages)
+            setMessagesReceived(messagesData.messages);
+            setFetchingPrevious(false);
+        } catch (error) {
+            console.error('Error fetching latest messages:', error);
+            setFetchingPrevious(false);
+        }
     };
 
     return (
