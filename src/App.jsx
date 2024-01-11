@@ -8,6 +8,7 @@ import LoginRegisterTemplate from "./pages/LoginRegister/LoginRegisterTemplate";
 import UserTemplate from './pages/User/UserTemplate';
 import ChatPage from './pages/User/ChatPage';
 import Chat from './pages/User/App';
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return(
@@ -19,10 +20,12 @@ function App() {
           <Route path='/customer' element={<UserTemplate />}/>
           <Route path='/seller' element={<UserTemplate />}/>
           <Route path='/user' element={<UserTemplate />}/>
+
           <Route path='/chat' element={<ChatPage />}/>
 
         </Routes>
       </Router>
+      <ToastContainer/>
     </div>
   )
 }

@@ -52,6 +52,10 @@ const Navbar=forwardRef(function Navbar(props,ref) {
             name:'Add New Food',
             active:page=='Add New Food'
         }
+        ,{
+          name:'Chats',
+          active:page=='Chats'
+      }
       ])
   } else {
     [items,setItems]=useState([

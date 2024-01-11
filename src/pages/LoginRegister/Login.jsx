@@ -10,7 +10,7 @@ import InputPassword from '../../components/InputPassword';
 
 import UserServices from '../../services/UserServices';
 import { useNavigate } from 'react-router-dom';
-
+import ToastServices from "../../services/ToastServices";
 
 function Login(props) {
   // State for username and password
@@ -65,12 +65,14 @@ function Login(props) {
     }
   })
   .catch((error) => {
-    console.log(error)
+    console.log(error.response.data.errors);
 
-    const errorMessages = error.response.data.properties.errors;
+    const errorMessages = error.response.data.errors;
+    
+
     errorMessages.forEach((errorMessage) => {
       // Assuming ToastServices.Error and convertErrorMessage are defined
-      ToastServices.Error(convertErrorMessage(errorMessage.error));
+      ToastServices.Error(errorMessage.error);
     });
   });
   };

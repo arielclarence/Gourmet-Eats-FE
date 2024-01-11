@@ -18,7 +18,7 @@ export default function InputFile(props){
     return(
         <div className="mb-3 mx-5 d-flex flex-column w-100">
             <img className="mb-2 align-self-center mx-5 img-fluid rounded-circle w-50" src={profilePicture}/>
-            <MDBFile name="profilePicture" onChange={e=>changeImage(e)}/>
+            <MDBFile name={props.name || "profilePicture"} onChange={e=>changeImage(e)}/>
         </div>
     )
 }

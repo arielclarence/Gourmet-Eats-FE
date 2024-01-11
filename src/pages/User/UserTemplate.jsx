@@ -5,6 +5,8 @@ import CustomerDashboard from "./CustomerDashboard";
 import UserProfile from "./UserProfile";
 import CreateFood from "./Addnewfoodform";
 import Cuisinestable from "./Cuisine";
+import Chatstable from "./Chats";
+
 import Userstable from "../LoginRegister/User";
 import UserServices from "../../services/UserServices";
 import { useNavigate } from "react-router-dom";
@@ -55,6 +57,9 @@ export default function UserTemplate(){
                 break;
             case 'Add New Food':
                 setPageObject(<CreateFood/>)
+                break;
+            case 'Chats':
+                setPageObject(<Chatstable/>)
                 break;
             default:
                 setPageObject(<UserProfile profilePictureUpload={profilePictureUpload}/>)

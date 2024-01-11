@@ -30,9 +30,9 @@ const CreateFood = forwardRef(function CreateFood(props, ref) {
         fetchCuisines();
     }, []); // Include fetchCuisines in the dependency array
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(formData)
+    
         if (
             formData.name.length < 1 ||
             formData.description.length < 1 ||
@@ -42,87 +42,88 @@ const CreateFood = forwardRef(function CreateFood(props, ref) {
         ) {
             ToastServices.Error("There is an empty field!");
         } else {
-            FirebaseServices.uploadImage(formData.image, "food/" + formData.name)
-                .then((downloadUrl) => {
-                    formData.pictureUrl = downloadUrl;
-                    FoodServices.createFood(formData)
-                        .then(() => {
-                            ToastServices.Success("Succesful creating new food");
-                            props.onSubmit(formData);
-                        })
-                        .catch((error) => {
-                            const errorMessages = error.response.data.properties.errors;
-                            errorMessages.map((errorMessage) =>
-                                ToastServices.Error(convertErrorMessage(errorMessage.error))
-                            );
-                        });
-                });
+            try {
+                const downloadUrl = await FirebaseServices.uploadImage(formData.image, "user/" + formData.name);
+                formData.pictureUrl = downloadUrl; // Set pictureUrl before calling createFood
+                await FoodServices.createFood(formData);
+                ToastServices.Success("Successfully registered! Check your email to activate your account!");
+            } catch (error) {
+                const errorMessages = error.response.data.properties.errors;
+                errorMessages.map(errorMessage => ToastServices.Error(convertErrorMessage(errorMessage.error)));
+            }
         }
     };
+    
 
     useImperativeHandle(ref, () => ({
         handleSubmit,
     }));
 
-    const updateFormData = (name, value) => {
-        setFormData((prevFormData) => {
-            // Handle 'image' property separately
-            if (name === "image") {
-                return { ...prevFormData, [name]: value };
-            }
-            return { ...prevFormData, [name]: value };
-        });
+    const updateFormData = (event) => {
+        setFormData({...formData,[event.target.name]:(event.target.name=='image')?event.target.files[0]:event.target.value})
     };
     return (
         <MDBValidation className="w-75">
-            <InputFile onChange={(e) => updateFormData("image", e)} />
-
-            <MDBValidationItem feedback="Invalid value" invalid>
-                <MDBInput
-                    type="text"
-                    wrapperClass="mx-5"
-                    label="name"
-                    required
-                    name="name"
-                    onChange={(e) => updateFormData(e.target.name, e.target.value)}
-                />
-            </MDBValidationItem>
-            <MDBValidationItem feedback="Invalid value" invalid>
-                <MDBTextArea
-                    required
-                    wrapperClass="mx-5"
-                    step={0.01}
-                    label="description"
-                    name="description"
-                    onChange={(e) => updateFormData(e.target.name, e.target.value)}
-                />
-            </MDBValidationItem>
-            <MDBValidationItem feedback="Invalid value" invalid>
-                <label>Cuisine</label>
-                <Select
-                    options={cuisines.map((cuisine) => ({ value: cuisine.id, label: cuisine.cuisineName }))}
-                    onChange={(selectedOption) => updateFormData("cuisineid", selectedOption.value)}
-                    value={cuisines.find((cuisine) => cuisine.value === formData.cuisineid)}
-                />
-            </MDBValidationItem>
-            <MDBValidationItem feedback="Invalid value" invalid>
-                <MDBInput
-                    type="number"
-                    wrapperClass="mx-5"
-                    required
-                    step={0.01}
-                    label="price"
-                    name="price"
-                    onChange={(e) => updateFormData(e.target.name, e.target.value)}
-                />
-            </MDBValidationItem>
-
-            {/* Submit Button */}
-            <MDBBtn color="primary" onClick={handleSubmit}>
-                Submit
-            </MDBBtn>
+          <MDBValidationItem>
+          <InputFile name='image' getValue={updateFormData}/>
+        </MDBValidationItem>
+      
+          <MDBValidationItem feedback="Invalid value" invalid>
+            <MDBInput
+              type="text"
+              wrapperClass="mx-5"
+              label="name"
+              required
+              name="name"
+              onChange={(e) => updateFormData(e)}
+            />
+          </MDBValidationItem>
+          <MDBValidationItem feedback="Invalid value" invalid>
+            <MDBTextArea
+              required
+              wrapperClass="mx-5"
+              step={0.01}
+              label="description"
+              name="description"
+              onChange={(e) => updateFormData(e)}
+            />
+          </MDBValidationItem>
+          <MDBValidationItem feedback="Invalid value" invalid>
+            <label>Cuisine</label>
+            <Select
+              options={cuisines.map((cuisine) => ({
+                value: cuisine.id,
+                label: cuisine.cuisineName,
+              }))}
+              onChange={(selectedOption) =>
+                updateFormData({
+                  target: {
+                    name: "cuisineid",
+                    value: selectedOption.value,
+                  },
+                })
+              }
+              value={cuisines.find((cuisine) => cuisine.value === formData.cuisineid)}
+            />
+          </MDBValidationItem>
+          <MDBValidationItem feedback="Invalid value" invalid>
+            <MDBInput
+              type="number"
+              wrapperClass="mx-5"
+              required
+              step={0.01}
+              label="price"
+              name="price"
+              onChange={(e) => updateFormData(e)}
+            />
+          </MDBValidationItem>
+      
+          {/* Submit Button */}
+          <MDBBtn color="primary" onClick={handleSubmit}>
+            Submit
+          </MDBBtn>
         </MDBValidation>
-    );
+      );
 });
 
 export default CreateFood;

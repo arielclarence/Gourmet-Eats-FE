@@ -41,6 +41,7 @@ function Register(props) {
 
   //update form data
   const updateFormData=(event)=>{
+    console.log(event);
     setFormData({...formData,[event.target.name]:(event.target.name=='profilePicture')?event.target.files[0]:event.target.value})
   }
 
@@ -150,7 +151,6 @@ function Register(props) {
     }else{
       FirebaseServices.uploadImage(formData.profilePicture,"user/"+formData.username)
       .then(downloadUrl=>{
-        // setFormData({...formData,["profilePictureUrl"]:downloadUrl})
         formData.profilePictureUrl=downloadUrl
         userservices.saveUser(formData)
         .then(ToastServices.Success("Succesfully registered! Check your email to activate your account!"))

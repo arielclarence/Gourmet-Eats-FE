@@ -19,7 +19,57 @@ const makechatroom = async (formUser) => {
     throw error;
   }
 };
+const getChatBySellerId = async (sellerid) => {
+  const accessToken= JSON.parse(sessionStorage.getItem("token"))
 
+  console.log(JSON.stringify(accessToken));
+
+  if (accessToken) {
+    try {
+      const response = await axios.get(`${hostName}/seller/${sellerid}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      // Handle the response data
+      console.log(JSON.stringify(response.data));
+      return response.data;
+    } catch (error) {
+      console.error('Request failed:', error);
+      // Handle unauthorized access or other errors
+    }
+  } else {
+    // Redirect to login page or handle unauthenticated state
+  }
+};
+const getChatByCustomerId = async (sellerid) => {
+  const accessToken= JSON.parse(sessionStorage.getItem("token"))
+
+  console.log(JSON.stringify(accessToken));
+
+  if (accessToken) {
+    try {
+      const response = await axios.get(`${hostName}/customer/${sellerid}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      // Handle the response data
+      console.log(JSON.stringify(response.data));
+      return response.data;
+    } catch (error) {
+      console.error('Request failed:', error);
+      // Handle unauthorized access or other errors
+    }
+  } else {
+    // Redirect to login page or handle unauthenticated state
+  }
+};
 export default {
-  makechatroom
+  makechatroom,
+  getChatBySellerId,
+  getChatByCustomerId
+
 };
