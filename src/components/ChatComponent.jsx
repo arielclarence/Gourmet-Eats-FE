@@ -13,8 +13,7 @@ function ChatComponent(props) {
   const handleOpenChat = async () => {
     try {
       // Make the chat room and get the chat ID
-      sessionStorage.setItem('chatId', props.Chat.id);
-
+      sessionStorage.setItem('chatId',JSON.stringify(props.Chat));
       // Navigate to the chat page with the chat ID
       navigate('/chat');
     } catch (error) {

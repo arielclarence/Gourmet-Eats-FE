@@ -8,6 +8,8 @@ import UserServices from '../../services/UserServices';
 
 function ChatPage() {
     const user=UserServices.getUserFromToken();
+    const chatId= JSON.parse(sessionStorage.getItem("chatId"));
+    const [username,setUsername] = useState([]);
     const [stompClient, setStompClient] = useState();
     const [messagesReceived, setMessagesReceived] = useState([]);
     const [fetchingPrevious, setFetchingPrevious] = useState(false);
@@ -21,7 +23,7 @@ function ChatPage() {
         });
 
         stompClient.onConnect = () => {
-            stompClient.subscribe('/topic/chat', (frame) => {
+            stompClient.subscribe(`/user/${chatId.id}/queue/inboxmessages`, (frame) => {
                 onMessageReceived(frame);
             });
         };
@@ -37,7 +39,6 @@ function ChatPage() {
     }, []);
 
     const sendMessage = async (newMessage) => {
-
         const payload = {
             'id': uuidv4(),
             'senderid': user.userid, // Assuming newMessage has senderid property
@@ -55,33 +56,66 @@ function ChatPage() {
         }
 
         // Publish the message to the WebSocket
-        stompClient.publish({ 'destination': '/topic/chat', body: JSON.stringify(payload) });
+        stompClient.publish({ 'destination': `/user/${chatId.id}/queue/inboxmessages`, body: JSON.stringify(payload) });
+
     };
 
     const onMessageReceived = (frame) => {
-        const message = JSON.parse(frame.body);
+        const rawMessage = JSON.parse(frame.body);
+
+        // Add formatted timestamp to the message
+        const timestamp = new Date().toLocaleString();
+        const message = {
+          ...rawMessage,
+          timestamp,
+        };
+      
+        console.log('Received Message:', message);
         setMessagesReceived((prevMessages) => [...prevMessages, message]);
     };
 
     const fetchLatestMessages = async () => {
-        setFetchingPrevious(true);
+    setFetchingPrevious(true);
 
-        try {
-            const messagesData = await MessageService.getMessagesByChatid();
-            console.log(messagesData.messages)
-            setMessagesReceived(messagesData.messages);
-            setFetchingPrevious(false);
-        } catch (error) {
-            console.error('Error fetching latest messages:', error);
-            setFetchingPrevious(false);
+    try {
+        const messagesData = await MessageService.getMessagesByChatid();
+        if (user.role === chatId.sellerid) {
+            setUsername(chatId.customername);
+        } else {
+            setUsername(chatId.sellername);
         }
-    };
+
+        // Check if there are messages before restructuring the data
+        if (messagesData.messages && messagesData.messages.length > 0) {
+            const restructuredData = messagesData.messages.map((message) => ({
+                id: message.id,
+                senderid: message.senderid.id,
+                content: message.content,
+                timestamp: message.timestamp.toLocaleString(),
+                chatid: message.chatid.id,
+            }));
+            
+            setMessagesReceived(restructuredData);
+        } else {
+            // If there are no messages, you can handle it as needed.
+            console.log('No messages available.');
+        }
+
+        setFetchingPrevious(false);
+    } catch (error) {
+        console.error('Error fetching latest messages:', error);
+        setFetchingPrevious(false);
+    }
+};
+
 
     return (
         <div className="App">
-            <SendMessageComponent onMessageSend={sendMessage} />
+            
+            <ChatMessagesComponent messagesReceived={messagesReceived} displayname={username} id={user.userid}/>
             <br></br>
-            <ChatMessagesComponent messagesReceived={messagesReceived} />
+            <SendMessageComponent onMessageSend={sendMessage} />
+
         </div>
     );
 }

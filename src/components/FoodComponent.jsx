@@ -17,8 +17,7 @@ function FoodCardComponent({ food, onSelect, isSelected }) {
   const handleOpenChat = async () => {
     try {
       // Make the chat room and get the chat ID
-      const chatId = await ChatService.makechatroom(chatData);
-
+      const chat = await ChatService.makechatroom(chatData);
       // Navigate to the chat page with the chat ID
       navigate('/chat')
       window.location.href = '/chat';

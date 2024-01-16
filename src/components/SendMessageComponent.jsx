@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-const SendMessageComponent = (props) => {
+const SendMessageComponent = (props,displayname) => {
   const [message, setMessage] = useState('');
-
+console.log(displayname)
 
 
   const onMessageSend = () => {
@@ -22,7 +22,7 @@ const SendMessageComponent = (props) => {
 
   return (
     <form onSubmit={onSubmit}>
-      <label htmlFor='message'>Message:</label>
+      <label htmlFor='message'>Send Message</label>
       <input id='message' type='text' onChange={(event) => setMessage(event.target.value)} value={message}></input>
       <br />
       <button type="button" onClick={onMessageSend}>Send</button>

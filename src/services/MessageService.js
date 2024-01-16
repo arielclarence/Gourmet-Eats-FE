@@ -2,9 +2,9 @@ import axios from 'axios';
 
 const hostName = "http://localhost:8080/message";
 const sendMessage = async (formUser) => {
-  const chatId= sessionStorage.getItem("chatId")
-  console.log(JSON.stringify(chatId));
-  formUser.chatid=chatId;
+  const chatId= JSON.parse(sessionStorage.getItem("chatId"));
+  formUser.chatid=chatId.id;
+  console.log(formUser);
   try {
     const response = await axios.post(hostName, formUser);
 
@@ -18,12 +18,12 @@ const sendMessage = async (formUser) => {
 const getMessagesByChatid = async () => {
   const accessToken= JSON.parse(sessionStorage.getItem("token"))
 
-  const chatId= sessionStorage.getItem("chatId")
-  console.log(JSON.stringify(chatId));
+  const chatId= JSON.parse(sessionStorage.getItem("chatId"));
+  console.log(JSON.stringify(chatId.id));
 
-  if (chatId) {
+  if (chatId.id) {
     try {
-      const response = await axios.get(`${hostName}/chat/${chatId}`, {
+      const response = await axios.get(`${hostName}/chat/${chatId.id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

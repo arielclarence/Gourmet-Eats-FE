@@ -1,6 +1,7 @@
 import React from 'react';
 
 const MessageReceived = (props) => {
+  
   const messageStyle = {
     textAlign: props.isCurrentUser ? 'right' : 'left',
     margin: '5px',
@@ -8,24 +9,25 @@ const MessageReceived = (props) => {
     border: '1px solid #ccc',
     borderRadius: '5px',
   };
-
   return (
     <div style={messageStyle}>
-      <div>{props.text}  {props.timestamp}</div>
+      
+      <div>{props.text} {props.id} {props.timestamp} {props.isCurrentUser}</div>
     </div>
   );
 };
 
 const ChatMessagesComponent = (props) => {
+console.log(props)
   return (
     <>
-      <h2>Messages:</h2>
+      <h2>Messages with {props.displayname}</h2>
       {props.messagesReceived.map((message) => (
         <MessageReceived
           key={message.id}
           text={message.content}
           timestamp={message.timestamp}
-          isCurrentUser={message.from === props.username}
+          isCurrentUser={message.senderid === props.id}
         />
       ))}
     </>
