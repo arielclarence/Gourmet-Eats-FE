@@ -35,6 +35,9 @@ const Navbar=forwardRef(function Navbar(props,ref) {
             name:'Foods',
             active:page=='Add Food'
         },{
+          name:'Add New Cuisine',
+          active:page=='Add New Cuisine'
+      },{
             name:'Users',
             active:page=='Users'
         }

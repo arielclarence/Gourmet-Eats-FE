@@ -4,6 +4,7 @@ import AdminDashboard from './AdminDashboard';
 import CustomerDashboard from "./CustomerDashboard";
 import UserProfile from "./UserProfile";
 import CreateFood from "./Addnewfoodform";
+import CreateCuisine from "./Addnewcuisineform";
 import Cuisinestable from "./Cuisine";
 import Chatstable from "./Chats";
 
@@ -57,6 +58,9 @@ export default function UserTemplate(){
                 break;
             case 'Add New Food':
                 setPageObject(<CreateFood/>)
+                break;
+            case 'Add New Cuisine':
+                setPageObject(<CreateCuisine/>)
                 break;
             case 'Chats':
                 setPageObject(<Chatstable/>)

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import CuisineComponent from '../../components/CuisineComponent';
 import { getAllCuisine } from "../../services/CuisineServices";
 import Food from "./Food";
+import "./Cuisinestable.css"; 
 // import Food from "./foodbasicdone";
 const Cuisinestable = () => {
   const [Cuisines, setCuisines] = useState([]);

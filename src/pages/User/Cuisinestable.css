@@ -1,0 +1,12 @@
+.scrollable-container-wrapper {
+  overflow-x: auto;
+}
+
+.scrollable-container {
+  display: flex;
+  white-space: nowrap;
+}
+
+.card-container {
+  margin-right: 0px; /* Add left margin to all cards */
+}
