@@ -24,7 +24,8 @@ function getUserFromToken() {
 
 async function Login(formData){
 console.log(formData)
-    const response = await axios.post(`${hostName}/login`, formData)
+
+    const response = await axiosInstance.post(`${hostName}/login`, formData)
     .then(response=>{
         const token=response.data.accessToken
         console.log(response.data.accessToken);

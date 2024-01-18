@@ -1,5 +1,5 @@
 import axios from "axios";
-
+const hostName='http://localhost:8080/'
 const axiosInstance=axios.create({
     baseURL:'http://localhost:8080/',
     headers:{
@@ -26,12 +26,12 @@ axiosInstance.interceptors.response.use(
     },
     async (error)=>{
         const originalConfig=error.config;
-        if (originalConfig.url!=="/user/login"&&error.response) {
+        if (error.response.status==401) {
             originalConfig._retry=true;
-
+            const oldToken=JSON.parse(sessionStorage.getItem("token"))
             try{
-                const refreshTokenPromise=await axiosInstance.post("user/token",{
-                    token:JSON.parse(sessionStorage.getItem("token"))
+                const refreshTokenPromise=await axios.post(hostName+"user/login/token",{
+                    token:oldToken
                 })
     
                 const {token}=refreshTokenPromise.data;

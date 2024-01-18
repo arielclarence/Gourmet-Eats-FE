@@ -69,7 +69,10 @@ const Navbar=forwardRef(function Navbar(props,ref) {
         ,{
           name:'Cuisines',
           active:page=='Cuisines'
-      }
+      },{
+        name:'Cart',
+        active:page=='Cart'
+    }
       ])
   }
 

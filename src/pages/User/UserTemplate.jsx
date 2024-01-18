@@ -11,6 +11,7 @@ import Chatstable from "./Chats";
 import Userstable from "../LoginRegister/User";
 import UserServices from "../../services/UserServices";
 import { useNavigate } from "react-router-dom";
+import CartPage from "./Cartpage";
 
 export default function UserTemplate(){
     const childRef=useRef()
@@ -61,6 +62,9 @@ export default function UserTemplate(){
                 break;
             case 'Add New Cuisine':
                 setPageObject(<CreateCuisine/>)
+                break;
+            case 'Cart':
+                setPageObject(<CartPage/>)
                 break;
             case 'Chats':
                 setPageObject(<Chatstable/>)

@@ -85,7 +85,6 @@ function Login(props) {
               <MDBBtn className="mb-4 px-5 mx-5 w-100" color='info' size='lg' type='submit'>
                 Login
               </MDBBtn>
-              <p className="small mb-1 pb-lg-3 ms-5 ps-5 d-flex justify-content-center"><u className="link" onClick={props.forgotPassword}>Forget password?</u></p>
             <p className='ms-5'>
               Don't have an account? <u onClick={props.changeToRegister} className="link-info">Register here</u>
             </p>
